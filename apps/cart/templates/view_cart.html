@@ -1,0 +1,126 @@
+{% extends "base_tmp.html" %}
+
+{% block content %}
+
+<!--内容-->
+<div class="container" style="margin-top:76px">
+    <div class="row">
+        {# 主页部分#}
+        <div class="col-md-8">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-list-alt"></span>{{user.username}}的购物车清单</h3>
+                </div>
+                <div class="panel-body">
+
+                        <div>
+                            <table class="table" style="border: 1px;">
+                            <thead>
+                            <tr>
+                                <th class="header "><input type="checkbox" class="checkboxAll" checked>全选</th>
+                                <th class="yellow header">名称</th>
+                                <th class="header">数量</th>
+                                <th class="blue header">单价</th>
+                                <th class="green header">小计</th>
+                                <th class="green header">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in product_list %}
+                            <tr>
+                                <td><input type="checkbox" name="car_ids" class="checkOne"  value="{{ item.id }}"  {% if item.flag == 0 %}checked{% endif %}></td>
+                                <td>{{item.product.a_title}}</td>
+                                 <td><button class="btn_sub">-</button><input type="text" value="{{item.quantity}}" art_id="{{ item.product_id }}" style="width: 30px;" class="product_num"><button class="btn_add">+</button></td>
+                                <td>{{item.unit_price}}</td>
+                                <td>{% widthratio item.quantity 1 item.unit_price %}</td>
+                                <td><a href="{% url 'cart:clean' %}?item_id={{item.id}}"><input type="button"  class="good_delete"  value="删除"></a></td>
+
+
+                            </tr>
+                            {% endfor %}
+                            <tr style="color: green">
+                                <th></th>
+                                <td></td>
+                                <th>总计：</th>
+                                <th>{{total_price}}</th>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+
+                        <div class="pull-right">
+                            <a class="btn  btn-primary"  type="button" href="{% url 'art:index' %}">继续购物</a>
+                            <a class="btn  btn-danger" type="button" href="{% url 'cart:clean' %}">清空购物车</a>
+                            <a class="btn  btn-success" href="{% url 'order:submit_order' %}">商品结算</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+        {# 推荐部分#}
+        <div class="col-md-4 filebox" >
+            <div class="recommend "></div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script language="JavaScript">
+    $(document).ready(function () {
+          {#=====购物车商品加操作=====  #}
+            $('.btn_add').click(function () {
+                let value = parseInt($(this).prev().val())+1;
+                $(this).prev().val(value);
+                let art_id = $(this).prev().attr('art_id');
+                let href="{% url 'cart:add' %}?id=" + art_id +  '&num=' + String(value);
+                window.location.href = href
+            });
+
+              {#=====购物车商品减操作=====  #}
+            $('.btn_sub').click(function () {
+                let value=parseInt($(this).next().val()) < 1 ? 0 : parseInt($(this).next().val())-1;
+                 $(this).next().val(value);
+                 let art_id = $(this).next().attr('art_id');
+                 let href="{% url 'cart:sub' %}?id=" + art_id ;
+                  window.location.href = href
+
+            });
+
+            {#=====购物车商品删除操作=====  #}
+            $('.good_delete').click(function () {
+                let value=parseInt($(this).next().val()) < 1 ? 0 : parseInt($(this).next().val())-1;
+                 $(this).next().val(value)
+
+            });
+
+            {#  =====购物车全选操作=====  #}
+             $(".checkboxAll").click(function() {
+                if (this.checked) {
+                    $('.checkOne').prop("checked", true);
+                }else {
+                    $('.checkOne').prop("checked", false);
+                    let kind = '2';
+                    window.location.href = 'http://127.0.0.1:9000/cart/cart/view/?kind=' + kind
+
+                }
+             });
+
+             {#  =====购物车选择操作=====  #}
+             $(".checkOne").click(function() {
+                if (this.checked) {
+                    {#$(this).prop("checked", true);#}
+                    let item_id = $(this).val();
+                    let kind = '0';
+                    window.location.href =  'http://127.0.0.1:9000/cart/cart/view/?item_id=' + item_id + '&kind=' + kind
+                }else {
+                    $('.checkboxAll').prop("checked", false);
+                    let item_id = $(this).val();
+                    let kind = '1';
+                    window.location.href =  'http://127.0.0.1:9000/cart/cart/view/?item_id=' + item_id + '&kind=' + kind
+                }
+             });
+    });
+
+</script>
+{% endblock %}

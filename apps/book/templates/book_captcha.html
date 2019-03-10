@@ -1,0 +1,32 @@
+{% extends "base_tmp.html" %}
+
+{% block content %}
+<!--内容-->
+<div class="container" style="margin-top:76px">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-list-alt"></span>{{art_capter.art.a_title}}  章节详情</h3>
+                </div>
+                <div class="panel-body">
+                    <h1 class="text-center">{{ art_capter.title }}</h1>
+                    <div style="color: green;" align="center">
+                        时间:<span>{{art_capter.create_time}}</span>
+                    </div>
+                    <br>
+
+                    <span>{{art_capter.content}}</span>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+<!--内容-->
+{% endblock %}

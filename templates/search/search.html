@@ -1,0 +1,55 @@
+{% extends "base_tmp.html" %}
+
+{% block carousel %}
+
+    {% include "book_banner.html" %}
+
+{% endblock %}
+
+{% block content %}
+<section id="artlist" style="margin-top:0px">
+    <div class="container">
+        <div class="row wow fadeIn" data-wow-delay="0.6s">
+
+                <div class="col-md-10">
+                    {{ page.object_list }}
+                    {% for item in page.object_list %}
+                        <div class="col-md-2">
+                            <div class=" text-center" style="width:150px">
+                                <img src="/static/imgs/full/{{item.object.a_img_url_figer}}.jpg" style="width:100%;height:200px;" class="img-responsive center-block lazy" alt="">
+                                <div class="" style="width:100%;">
+                                    <div style="color: #0f0f0f;height: 30px; font-weight: bold" class="text-center">{{item.object.a_title}}</div>
+                                    <div style="height: 20px;overflow:hidden;text-overflow: ellipsis;white-space: nowrap">{{item.object.a_info}}</div>
+                                </div>
+                                <div style="width: 100%" class="text-center" >
+                                    <a href="{% url 'art:detail' %}?id={{item.object.id}}" class="btn btn-primary" target="_blank" role="button" style="width: 100%"><span class="glyphicon glyphicon-eye-open"></span>&nbsp;阅读</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+        </div>
+    </div>
+
+{#    分页按钮    #}
+<div class="text-center">
+    <ul class="pagination ">
+    {% if page.has_previous  %}
+        <li><a href="/search?q={{ query }}&page={{ page.previous_page_number }}">&laquo;上一页</a></li>
+    {% else %}
+            <li class="disabled"><a>&laquo;上一页</a></li>
+    {% endif %}
+    {% for pindex in paginator.page_range %}
+        <li {% if pindex == page.number %}class="active"{% endif %}><a href="/search?q={{ query }}&page={{ pindex }}" {% if pindex == page.number %}class="active"{% endif %}>{{ pindex }}</a></li>
+    {% endfor %}
+    {% if page.has_next %}
+        <li><a href="/search?q={{ query }}&page={{ page.next_page_number }}">下一页&raquo;</a></li>
+    {% else %}
+            <li class="disabled"><a>下一页&raquo;</a></li>
+    {% endif %}
+    </ul>
+</div>
+
+</section>
+{% endblock %}

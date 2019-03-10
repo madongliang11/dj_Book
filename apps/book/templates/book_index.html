@@ -1,0 +1,109 @@
+{% extends "base_tmp.html" %}
+
+{% block carousel %}
+
+    {% include "book_banner.html" %}
+
+{% endblock %}
+
+{% block content %}
+<!--文章列表-->
+<section id="artlist" style="margin-top:0px">
+    <div class="container">
+        <div class="row wow fadeIn" data-wow-delay="0.6s">
+            <div class="col-md-12 table-responsive">
+                <table class="table text-left table-bordered" id="arttags">
+                    <tr>
+                        <td style="width:10%;"><span class="glyphicon glyphicon-th-list"></span>文章标签</td>
+                        <td style="width:90%;">
+                             <a class="label label-info" id="curtag0" href="{{url}}?t=0"><span
+                                    class="glyphicon glyphicon-tag"></span>&nbsp;全部</a>
+                            {% for tag in tags %}
+                            <a class="label label-info" id="curtag{{tag.id}}" href="{{url}}?t={{tag.id}}"><span class="glyphicon glyphicon-tag"></span>&nbsp;{{tag.t_name}}</a>
+                            &nbsp;
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-md-10">
+                {% for v in  data %}
+                <div class="col-md-2">
+                    <div class=" text-center" style="width:150px">
+                        <img src="/static/imgs/full/{{v.a_img_url_figer}}.jpg" style="width:100%;height:200px;" class="img-responsive center-block lazy" alt="">
+                        <div class="" style="width:100%;">
+                            <div style="color: #0f0f0f;height: 30px; font-weight: bold" class="text-center">{{v.a_title}}</div>
+                            <div style="height: 20px;overflow:hidden;text-overflow: ellipsis;white-space: nowrap">{{v.a_info}}</div>
+                        </div>
+                        <div style="width: 100%" class="text-center" >
+                            <a href="{% url 'art:detail' %}?id={{v.id}}" class="btn btn-primary" target="_blank" role="button" style="width: 100%"><span class="glyphicon glyphicon-eye-open"></span>&nbsp;阅读</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-2">
+                <table class="table table-hover">
+                <tr><th class="h3" style="color: red"><span class="glyphicon glyphicon-th-large" ></span>口碑排行榜</th></tr>
+                {% for v in  data %}
+                    <tr><td class="clearfix"><a href="{% url 'art:detail' %}?id={{v.id}}" class="pull-left" >{{v.a_title}}</a></td></tr>
+                {% endfor %}
+
+            </table>
+            </div>
+
+            <div class="col-md-12 text-center" style="margin-top:12px;">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li>
+                            <a href="{{url}}?page=1&t={{t}}" aria-label="First">
+                                <span aria-hidden="true">首页</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url}}?page={{prev}}&t={{t}}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">上一页</span>
+                            </a>
+                        </li>
+                        {% for v in pagerange %}
+                        {% if v == page %}
+                        <li class="active"><a href="{{url}}?page={{ v }}&t={{t}}">{{v}}</a></li>
+                        {% else %}
+                        <li><a href="{{url}}?page={{ v }}&t={{t}}">{{ v }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        <li>
+                            <a href="{{url}}?page={{next}}&t={{t}}"
+                               aria-label="Next">
+                                <span aria-hidden="true">下一页</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{url}}?page={{pagenum}}&t={{t}}"
+                               aria-label="Last">
+                                <span aria-hidden="true">尾页</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <a class="label label-success" style="display:inline-block;width:150px;">共{{pagenum}}页</a>
+                &nbsp;
+                <a class="label label-info" style="display:inline-block;width:150px;">共{{total}}条记录</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!--电影列表-->
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $("#curtag{{t}}").attr("class","label label-danger");
+    });
+</script>
+
+
+{% endblock %}

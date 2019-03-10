@@ -1,0 +1,202 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" CONTENT="IE=edge">
+    <!--页面需默认用极速核-->
+    <meta name="renderer" content="webkit">
+    <!--
+       name="viewport" 支持移动端的浏览器
+       width=device-width,指的是移动端页面的宽度等于设备的宽度
+       initial-scale=1指的是页面将是原本尺寸展示，如果后面是2的话，就是是将页面放大两倍
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1 , user-scalable=no">
+
+    <title>精选美文</title>
+
+    <script src="{% static 'base/js/jquery.min.js' %}" ></script>
+    <link rel="shortcut icon" href="{% static 'base/images/logo.png' %} ">
+    <link rel="stylesheet" href="{% static 'base/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'base/css/bootstrap-art.css' %}">
+    <link rel="stylesheet" href="{% static 'base/css/animate.css' %}">
+    <style>
+        .navbar-brand>img {
+            display: inline;
+        }
+        .media{
+            padding:1px;
+            border:1px solid #ccc
+        }
+    </style>
+     <!-- css 预留版块，提供给子模板扩展 -->
+     {% block css %}{% endblock %}
+
+</head>
+<body>
+<!--导航栏-->
+<nav class="navbar navbar-inverse navbar-fixed-top ">
+    <div class="container">    <!--  容器中放置 -->
+        <!--小屏幕，导航按钮和logo-->
+        <div class="navbar-header">
+
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <a href="{% url 'art:index' %}" class="navbar-brand" style="width:250px;">
+                <img src="{% static 'base/images/logo.png' %}" style="height:30px;">&nbsp;书籍电商网站
+            </a>
+        </div>
+
+
+        <div class="navbar-collapse collapse">
+            <form class="navbar-form navbar-left" role="search" action="{% url 'search:haystack_search' %}" method="get" style="margin-top:18px;">
+                <div class="form-group input-group">
+                    <input type="text" class="form-control" placeholder="请输入文章信息！" id="key" name="q">
+{#                    <span class="input-group-btn">#}
+{#                        <a id="btn-search" class="btn btn-default">&nbsp;&nbsp;<span class="glyphicon glyphicon-search"></span>&nbsp;搜索</a>#}
+{#                    </span>#}
+                </div>
+                <button type="submit" class="btn btn-info "><span class="glyphicon glyphicon-search"></span></button>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if request.session.muser %}
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" style="color: red" data-toggle="dropdown" href="#">
+                        <span class="glyphicon glyphicon-user"></span>{{request.session.muser}}
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                       <li>
+                          <a class="curlink" href="{% url 'message:form' %}"><span class="glyphicon glyphicon-book"></span>&nbsp;留言板</a>
+                        </li>
+                        <li>
+                           <a class="curlink" href="{% url 'cart:view' %}" ><span class="glyphicon glyphicon-shopping-cart"></span>我的购物车 </a>
+                        </li>
+
+                        <li>
+                           <a class="curlink" href="{% url 'order:view_order' %}" ><span class="glyphicon glyphicon-lock"></span>我的订单 </a>
+                        </li>
+
+                        <li class="divider"></li>
+                        <li>
+                           <a class="curlink" href="/apis/docs" target="_blank"><span class="glyphicon glyphicon-book"></span>系统APIs文档 </a>
+                        </li>
+
+                        <li class="divider"></li>
+                        <li>
+                           <a class="curlink" href="{% url 'user:logout' %}"><span class="glyphicon glyphicon-off"></span>&nbsp;注销</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a class="curlink" href="{% url 'analyze:index' %}" ><span class="glyphicon glyphicon-picture"></span>统计页面 </a>
+                </li>
+
+
+                {% else %}
+                  <li>
+                       <a class="curlink" href="{% url 'user:login' %}"><span class="glyphicon glyphicon-user"></span>登录</a>
+                  </li>
+                   <li>
+                       <a class="curlink" href="{% url 'user:register' %}"><span class="glyphicon glyphicon-plus"></span>注册</a>
+                  </li>
+                {% endif %}
+                 <li>
+                    <a class="curlink" href="{% url 'art:classify' %}"><span class="glyphicon glyphicon-th-list"></span>&nbsp分类页面</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- 轮播图区 -->
+{% block carousel %}{% endblock %}
+
+<!-- 内容区 -->
+{% block content %}{% endblock %}
+
+<!--底部-->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    ©&nbsp;2018&nbsp;1000phone.com&nbsp;xICP备 by zl
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static 'base/js/jquery.min.js' %}"></script>
+<script src="{%  static 'base/js/bootstrap.min.js' %}"></script>
+<script src="{%  static 'base/js/jquery.singlePageNav.min.js' %}"></script>
+<script src="{%  static 'base/js/wow.min.js' %}"></script>
+{#<script src="{%  static 'lazyload/jquery.lazyload.min.js' %}"></script>#}
+{#<script src="//cdn.bootcss.com/holder/2.9.4/holder.min.js"></script>#}
+<script>
+{##}
+{#    $(function() {#}
+{#        new WOW().init();#}
+{#    })#}
+{#</script>#}
+{#<script>#}
+{#    $(document).ready(function() {#}
+{#        $("img.lazy").lazyload({#}
+{#            effect: "fadeIn"#}
+{#        });#}
+{#        $("#btn-search").click(function(){#}
+{#            var key = $("#key").val();#}
+{##}
+{#            location.href = "/book/search?key="+key;#}
+{#        });#}
+{#    });#}
+
+
+
+$(document).ready(function () {
+    let url = 'http://127.0.0.1:9000/apis/recommend/';
+    $.get(url, function (data) {
+        books = data.results;
+        show_recommends(books);
+    });
+});
+
+    function show_recommends(books) {
+       for(let book of books){
+           let img_url =  'http://127.0.0.1:9000/static/imgs/full/' + book.a_img_url_figer + '.jpg';
+           let id = book.id;
+            $('.recommend')
+                .append(
+                $('<div>').css({width:'110px',marginRight:'10px',marginBottom:'20px'}).addClass('pull-left')
+                    .append(
+                        $('<img>').css({height:'150px',width:'100%'}).attr('src',img_url)
+                    )
+                    .append(
+                        $('<div>').css({height:'30px',width:'100%',background:'#2672ec'}).addClass('text-center')
+                            .append(
+                                $('<a>').text('立即阅读 ').css({color:' white',fontSize:'large'}).attr('href','{% url "art:detail" %}?id='+id)
+                            )
+                    )
+            )
+       }
+    }
+
+
+</script>
+
+{% block js %}{% endblock %}
+
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+{% extends "base_tmp.html" %}
+
+
+{% block css %}
+
+    <link rel="stylesheet" href="/static/base/css/msg_style.css">
+
+{% endblock %}
+
+{% block content %}
+    <!--内容-->
+<div class="container" style="margin-top:76px">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;留言板</h3>
+                </div>
+                <div class="panel-body">
+
+                    <form action="{% url 'message:form' %}" method="post" class="smart-green">
+
+                        <h1>留言信息
+                            <span>请留下你的信息.</span>
+                        </h1>
+                        <!--
+                        {{ form.as_p }}
+                        -->
+                        {{form.name.label}}
+                        <span style="color: red">{{form.name.errors}}</span>
+                        {{form.name}}
+
+
+                        {{form.email.label}}
+                        <span style="color: red">{{form.email.errors}}</span>
+                        {{form.email}}
+
+
+                        {{form.address.label}}
+                         <span style="color: red">{{form.address.errors}}</span>
+                        {{form.address}}
+
+
+                        {{form.message.label}}
+                        <span style="color: red">{{form.message.errors}}</span>
+                        {{form.message}}
+
+                        <div class="success-msg"></div>
+                        <label>
+                            <span>&nbsp;</span>
+                            <input type="submit" class="button" value="提交"/>
+                        </label>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--内容-->
+
+
+{% endblock %}

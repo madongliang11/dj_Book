@@ -1,0 +1,170 @@
+{% extends "base_tmp.html" %}
+
+
+{% block content %}
+    <!--内容-->
+    <div class="container" style="margin-top:76px">
+        <div class="row">
+            {# 主页部分#}
+            <div class="col-md-8">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;小说详情</h3>
+                    </div>
+                    <div class="panel-body clearfix">
+                        <div class="clearfix">
+                            <h1 class="" style="margin-left: 60px">{{ art.a_title }}</h1>
+                            <div class="pull-left" style="margin-right: 50px">
+                                <img src="/static/imgs/full/{{art.a_img_url_figer}}.jpg" style="width:300px;height:400px;" class="img-responsive  lazy" alt="">
+                            </div>
+                             <div class="pull-left">
+                                <div style="font-size: 18px;margin-bottom: 10px">书名:<span style="color: green"> {{ art.a_title }}</span></div>
+                                 <div style="font-size: 18px;margin-bottom: 10px">作者:<span style="color: green"> {{ art.a_author }}</span></div>
+                                 <div style="font-size: 18px;margin-bottom: 10px">价格:<span style="color: green"> {{ art.a_price }}元</span></div>
+                                <div style="font-size: 18px;width: 350px;margin-bottom: 20px">内容:<span style="color: green"> {{ art.content_set.first.a_content }}</span></div>
+                                 <div style="font-size: 18px" class="clearfix" >
+                                     <span class="pull-left">商品数量:</span>
+                                     <form class="pull-left" style="margin-left: 20px">
+                                         <button type="button" class="btn_sub">-</button><input type="text" value="1" style="width: 30px;" class="good_num" id="{{ art.id }}"><button type="button" class="btn_add">+</button>
+                                     </form>
+                                 </div>
+                                 <div class="span" style="margin-top: 20px">
+                                    <a class="btn primary btn-success" type="button" id="add_cart" href="{% url 'cart:add' %}?id={{ art.id }}">加入购物车</a>
+                                    <a class="btn primary btn-danger" id="buy_now" type="button" href="#">立即购买</a>
+                                </div>
+                             </div>
+                        </div>
+
+
+
+{#                        <div class="col-md-3">#}
+{#                        </div>#}
+                        <div class="col-md-9">
+
+                            {{ art.a_content | safe }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- ArtsTab begin -->
+                    <ul id="ArtsTab" class="nav nav-tabs" style="margin-top: 50px;">
+                        <li class="active">
+                            <a href="#catalog" data-toggle="tab" style="color: cadetblue;font-size: 20px;">
+                                小说章节
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#discuss" data-toggle="tab" style="color: cadetblue;font-size: 20px;">
+                                讨论区
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div id="ArtsTabContent" class="tab-content">
+                        <div class="tab-pane fade in active" id="catalog">
+
+                            <h3 align="center">{{ art.a_title }} 章节 </h3>
+                            <ul class="list-group">
+                                {% for capter in art_capters %}
+                                    <a class="list-group-item"
+                                       href="{% url 'art:capter' %}?id={{ capter.id }}">{{ capter.title }}</a>
+                                {% endfor %}
+                            </ul>
+
+                        </div>
+                        <div class="tab-pane fade" id="discuss">
+
+                            <h3 align="center">{{ art.a_title }} 的讨论区 </h3>
+                            <!--- 评论区表单 --->
+                            <form action="{% url 'comment:art_comm' art.pk %}" method="post" class="comment-form">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="{{ form.name.id_for_label }}">名字：</label>
+                                        {{ form.name }}
+                                        {{ form.name.errors }}
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="{{ form.title.id_for_label }}">标题：</label>
+                                        {{ form.title }}
+                                        {{ form.title.errors }}
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <label for="{{ form.text.id_for_label }}">评论：</label>
+                                        <br>
+                                        {{ form.text }}
+                                        {{ form.text.errors }}
+                                        <br>
+                                        <button type="submit" class="comment-btn btn-success">发表评论</button>
+                                    </div>
+                                </div>    <!-- row -->
+                            </form>
+                            <!--- 评论区表单 --->
+                            <br>
+
+                            <div class="comment-list-pannel">
+                                <h3>评论列表， 共<span>{{ comment_count }}</span>条评论</h3>
+                                <hr>
+                                <ul class="comment-list list-unstyled">
+                                    {% for comment in comment_list %}
+                                        <span class="glyphicon glyphicon-user label label-primary"> {{ comment.name }}</span>
+                                        <span class="glyphicon glyphicon-time label label-success">{{ comment.created_time }}</span>
+                                        <br><br>
+                                        <div class="text">
+                                            {{ comment.text }}
+                                        </div>
+                                        <hr>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ArtsTab end -->
+                </div>
+            </div>
+            {# 推荐部分#}
+
+            <div class="col-md-4 filebox" >
+                <div class="recommend "></div>
+            </div>
+
+        </div>
+    </div>
+    <!--内容-->
+{% endblock %}
+
+{% block js %}
+<script language="JavaScript">
+    $(document).ready(function () {
+        let origin_url =  $('#add_cart').attr('href');
+        let change_url = origin_url + '&num=';
+
+        {#=====购物车商品加操作=====  #}
+        $('.btn_add').click(function () {
+            let value = parseInt($(this).prev().val())+1;
+            $(this).prev().val(value);
+            $('#add_cart').attr('href',change_url + String(value));
+
+        });
+
+          {#=====购物车商品减操作=====  #}
+        $('.btn_sub').click(function () {
+            let value=parseInt($(this).next().val()) < 1 ? 0 : parseInt($(this).next().val())-1;
+             $(this).next().val(value);
+             $('#add_cart').attr('href',change_url + String(value));
+        });
+
+         {#=====购物车立即购买操作=====  #}
+        $('#buy_now').click(function () {
+            let num = $('.good_num').val() ;
+            let id = $('.good_num').attr('id') ;
+
+            window.location.href = 'http://127.0.0.1:9000/cart/cart/add/?now=now&id=' + id + '&num=' + num;
+        });
+
+    });
+
+</script>
+{% endblock %}

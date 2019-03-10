@@ -1,0 +1,11 @@
+启动异步操作:
+celery -A celery_tasks  worker -l info
+
+生成索引文件:
+python manage.py rebuild_index
+
+创建超级用户:
+python manage.py createsuperuser
+
+后台启动:
+nohup xxxxxx

@@ -1,0 +1,126 @@
+{% extends "base_tmp.html" %}
+
+{% block content %}
+
+    <!--内容-->
+    <div class="container" style="margin-top:76px">
+        <div class="row">
+            {#主页部分#}
+            <div class="col-md-8">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><span class="glyphicon glyphicon-list-alt"></span>{{ user.username }}的订单
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <form action="{% url 'order:submit_order' %}" method="post" class="smart-green">
+
+                            <div class="col-md-8">
+                                <h3 style="color: red"><span class="glyphicon glyphicon-hand-right"></span>订单配送信息</h3>
+                                {{ form.as_p }}
+
+                         {% if messages %}
+                           <ul>
+                              {% for msg in messages %}
+                                <li style="color: red">{{msg.message}}</li>
+                               {% endfor %}
+                           </ul>
+                        {% endif %}
+
+                            </div>
+
+                            <hr>
+                            <div class="col-md-9">
+                             <hr>
+                                <h3 style="color: red"><span class="glyphicon glyphicon-hand-right"></span>订单的购物车信息</h3>
+                                <table class="table" style="border: 1px;">
+                                    <thead>
+                                    <tr>
+                                        <th class="yellow header">名称</th>
+                                        <th class="header">数量</th>
+                                        <th class="blue header">单价</th>
+                                        <th class="green header">小计</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in product_list %}
+                                        {# 购物车选中的商品的信息#}
+                                        {% if item.flag == 0 %}
+                                            <tr>
+                                                <td>{{ item.product.a_title }}</td>
+                                                <th>{{ item.quantity }}</th>
+                                                <td>{{ item.unit_price }}</td>
+                                                <td>{% widthratio item.quantity 1 item.unit_price %}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <tr style="color: green">
+                                        <th></th>
+                                        <td></td>
+                                        <th>总计：</th>
+                                        <th>{{ total_price }}<input type="text" hidden value={{ total_price }} name='amount'></th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    <!--
+                                    <a class="btn  btn-success" href="/art/cart/check_order">确认订单</a></p>
+                                    -->
+                                    <input type="submit" class="button btn  btn-success" value="提交订单"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <a class="btn  btn-danger" type="button" href="{% url 'art:index' %}">继续购物</a></a></p>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+            {# 推荐部分#}
+            <div class="col-md-4 filebox" >
+                <div class="recommend "></div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+<script language="JavaScript">
+    $(document).ready(function () {
+        let url = 'http://127.0.0.1:9000/apis/booklist/';
+        $.get(url,function (results) {
+            books = results;
+            show_recommends(books);
+        })
+    });
+
+    function show_recommends(books) {
+       for(let book of books){
+           let img_url =  'http://127.0.0.1:9000/static/imgs/full/' + book.a_img_url_figer + '.jpg';
+            $('.recommend')
+                .append(
+                $('<div>').css({width:'110px',marginRight:'10px',marginBottom:'20px'}).addClass('pull-left')
+                    .append(
+                        $('<img>').css({height:'150px',width:'100%'}).attr('src',img_url)
+                    )
+                    .append(
+                        $('<div>').css({height:'30px',width:'100%',background:'#2672ec'}).addClass('text-center')
+                            .append(
+                                $('<a>').text('立即阅读 ').css({color:' white',fontSize:'large'})
+                            )
+                    )
+            )
+       }
+    }
+</script>
+{% endblock %}
