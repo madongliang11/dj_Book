@@ -18,7 +18,7 @@ coreschema==0.0.4
 cryptography==2.2.2
 cssselect==1.0.3
 diff-match-patch==20121119
-Django==1.11
+Django==1.11.29
 django-crispy-forms==1.7.2
 django-filter==1.1.0
 django-formtools==2.1
