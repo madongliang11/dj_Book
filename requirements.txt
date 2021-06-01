@@ -77,7 +77,7 @@ Twisted==18.9.0
 unicodecsv==0.14.1
 uritemplate==3.0.0
 urljoin==1.0.0
-urllib3==1.23
+urllib3==1.26.5
 urlopen==1.0.0
 vine==1.1.4
 w3lib==1.19.0
