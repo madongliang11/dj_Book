@@ -32,7 +32,7 @@ django-simple-captcha==0.5.9
 djangorestframework==3.8.2
 et-xmlfile==1.0.1
 future==0.17.1
-httpie==0.9.9
+httpie==3.1.0
 httplib2==0.11.3
 hyperlink==18.0.0
 idna==2.7
